@@ -1,4 +1,4 @@
-name: Publish
+name: Journey Tests
 
 on:
   workflow_dispatch: # Manually trigger the suite
