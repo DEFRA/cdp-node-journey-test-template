@@ -1,3 +1,5 @@
+const debug = process.env.DEBUG
+
 export const config = {
   //
   // ====================
@@ -11,7 +13,7 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: 'http://service-name:3000',
+  baseUrl: 'http://localhost:3000',
 
   //
   // ==================
@@ -29,11 +31,12 @@ export const config = {
   // then the current working directory is where your `package.json` resides, so `wdio`
   // will be called from there.
   //
-  specs: ['./test/specs/**/*.e2e.js'],
+  specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'
   ],
+  // injectGlobals: false,
   //
   // ============
   // Capabilities
@@ -50,7 +53,7 @@ export const config = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 3,
+  maxInstances: debug ? 1 : 3,
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -59,21 +62,15 @@ export const config = {
 
   capabilities: [
     {
-      maxInstances: 1,
       browserName: 'chrome',
-      hostname: 'localhost',
-      port: 4444,
+      browserVersion: 'stable',
       'goog:chromeOptions': {
-        args: [
-          '--no-sandbox',
-          '--disable-infobars',
-          '--headless',
-          '--disable-gpu',
-          '--window-size=1920,1080'
-        ]
+        args: ['headless', 'disable-gpu']
       }
     }
   ],
+
+  execArgv: debug ? ['--inspect'] : [],
 
   //
   // ===================
@@ -100,7 +97,7 @@ export const config = {
   //
   // If you only want to run your tests until a specific amount of tests have failed use
   // bail (default is 0 - don't bail, run all tests).
-  bail: 1,
+  bail: 0,
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,
@@ -146,7 +143,7 @@ export const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: 60000
+    timeout: debug ? 24 * 60 * 60 * 1000 : 60000
   }
   //
   // =====
@@ -161,7 +158,7 @@ export const config = {
    * @param {object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  // onPrepare: function (config, capabilities) {}
+  // onPrepare: function (config, capabilities) {},
   /**
    * Gets executed before a worker process is spawned and can be used to initialise specific service
    * for that worker as well as modify runtime environments in an async fashion.
@@ -179,7 +176,7 @@ export const config = {
    * @param  {object} specs    specs to be run in the worker process
    * @param  {number} retries  number of retries used
    */
-  // onWorkerEnd: function (cid, exitCode, specs, retries) {}
+  // onWorkerEnd: function (cid, exitCode, specs, retries) {},
   /**
    * Gets executed just before initialising the webdriver session and test framework. It allows you
    * to manipulate configurations depending on the capability or spec.
@@ -188,7 +185,7 @@ export const config = {
    * @param {Array.<String>} specs List of spec file paths that are to be run
    * @param {string} cid worker id (e.g. 0-0)
    */
-  // beforeSession: function (config, capabilities, specs, cid) {}
+  // beforeSession: function (config, capabilities, specs, cid) {},
   /**
    * Gets executed before test execution begins. At this point you can access to all global
    * variables like `browser`. It is the perfect place to define custom commands.
@@ -196,7 +193,7 @@ export const config = {
    * @param {Array.<String>} specs        List of spec file paths that are to be run
    * @param {object}         browser      instance of created browser/device session
    */
-  // before: function (capabilities, specs) {}
+  // before: function (capabilities, specs) {},
   /**
    * Runs before a WebdriverIO command gets executed.
    * @param {string} commandName hook command name
@@ -211,7 +208,7 @@ export const config = {
   /**
    * Function to be executed before a test (in Mocha/Jasmine) starts.
    */
-  // beforeTest: function (test, context) {}
+  // beforeTest: function (test, context) {},
   /**
    * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
    * beforeEach in Mocha)

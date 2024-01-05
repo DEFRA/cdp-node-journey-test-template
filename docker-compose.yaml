@@ -1,0 +1,46 @@
+version: "3.4"
+
+services:
+
+  # An example service. Replace this with your own code.
+  your-service-name:
+    image: defradigital/cdp-example-journey-test:${YOUR_SERVICE_NAME:-latest}  # Override the version by setting an environment variable YOUR_SERVICE_NAME=version.to.run
+    ports:
+      - "3000:80"
+    environment:
+      - PORT=80
+      - MONGO_URI=mongodb://mongodb:27017/?tls=false  # since we're using a bridged network, we refer to the mongo container etc by their hostname
+      - REDIS_HOST=redis
+      - LOCALSTACK_URL=http://localstack:4566
+
+  ## Databases, cache and queues, enabled/disable as required
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis:7.2.3-alpine3.18
+    ports:
+      - "6379:6379"
+
+  localstack:
+    image: localstack/localstack:3.0.2
+    container_name: localstack
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - LOCALSTACK_HOST=localstack
+      - SERVICES=s3,sqs,sns # Don't use services not supported by the cdp-platform!
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    healthcheck:
+      test: ["CMD", "curl", "localhost:4566"]
+      interval: 5s
+      start_period: 4s
+      retries: 3
+    profiles:
+      - localstack
+

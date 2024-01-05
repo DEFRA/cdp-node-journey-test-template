@@ -1,19 +1,14 @@
 import { browser, expect } from '@wdio/globals'
 
-import HomePage from 'page-objects/home.page'
+import ExamplePage from 'page-objects/example.page'
 
 describe('Home page', () => {
   it('Should be on the "Home" page', async () => {
-    await HomePage.open()
+    await ExamplePage.open()
 
-    await expect(browser).toHaveTitle('Directory listing for /')
-    /*
-    await expect(await HomePage.navIsActive()).toBe(true)
-    await expect(HomePage.serviceName).toHaveText(
-      'Core Delivery Platform - Portal'
-    )
-    await expect(HomePage.pageHeading).toHaveText(
-      'Build your Defra applications on the Core Delivery Platform'
-    )*/
+    await expect(browser).toHaveTitle('Journey Test | cdp-example-journey-test')
+
+    await expect(ExamplePage.title()).toHaveText('Journey Test')
+    await expect(ExamplePage.caption()).toHaveText('This is an example page.')
   })
 })
