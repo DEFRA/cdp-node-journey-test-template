@@ -29,7 +29,7 @@ jobs:
           echo -E "${contents}" > package-lock.json
           contents="$(jq '.packages[""].version = "0.0.0"' package-lock.json)"
           echo -E "${contents}" > package-lock.json
-          rm .github/workflows/template.yml
+          rm .github/workflows/template.yaml
       - name: Commit and push changes
         run: |
           git config --global user.name 'GitHub Actions'
